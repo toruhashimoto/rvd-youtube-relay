@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>RVD Live Chat Relay</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+  p { font: 13px system-ui, sans-serif; color: #888; padding: 16px; }
+</style>
+</head>
+<body>
+<script>
+// Official YouTube live-chat embed. YouTube only serves it when embed_domain
+// matches the embedding page, so it has to live on this HTTPS host rather than
+// in the extension page. Usage: chat.html?v=<videoId>[&dark=1]
+;(function () {
+  const params = new URLSearchParams(location.search)
+  const v = (params.get('v') || '').replace(/[^A-Za-z0-9_-]/g, '')
+  if (!v) {
+    document.body.innerHTML = '<p>video id missing</p>'
+    return
+  }
+  const u = new URL('https://www.youtube.com/live_chat')
+  u.searchParams.set('v', v)
+  u.searchParams.set('embed_domain', location.hostname)
+  if (params.get('dark') === '1') u.searchParams.set('dark_theme', '1')
+  const f = document.createElement('iframe')
+  f.src = u.toString()
+  f.title = 'YouTube live chat'
+  f.referrerPolicy = 'strict-origin-when-cross-origin'
+  document.body.appendChild(f)
+})()
+</script>
+</body>
+</html>

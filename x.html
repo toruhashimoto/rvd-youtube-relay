@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RVD X Timeline Relay</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; }
+  body { overflow: auto; }
+  p { font: 13px system-ui, sans-serif; color: #888; padding: 16px; }
+</style>
+</head>
+<body>
+<script>
+// Official X embedded timeline (widgets.js). The extension page may not load
+// remote scripts (MV3), so it frames this page instead.
+// Usage: x.html?user=<screen_name>[&dark=1]
+;(function () {
+  const params = new URLSearchParams(location.search)
+  const user = params.get('user') || ''
+  if (!/^[A-Za-z0-9_]{1,15}$/.test(user)) {
+    document.body.innerHTML = '<p>invalid account</p>'
+    return
+  }
+  const a = document.createElement('a')
+  a.className = 'twitter-timeline'
+  a.href = 'https://twitter.com/' + user
+  a.setAttribute('data-theme', params.get('dark') === '1' ? 'dark' : 'light')
+  a.setAttribute('data-chrome', 'noheader nofooter transparent')
+  a.setAttribute('data-dnt', 'true')
+  a.textContent = '@' + user + ' のポストを読み込み中…（表示されない場合は X にログインしてください）'
+  document.body.appendChild(a)
+  const s = document.createElement('script')
+  s.async = true
+  s.src = 'https://platform.twitter.com/widgets.js'
+  document.body.appendChild(s)
+})()
+</script>
+</body>
+</html>
